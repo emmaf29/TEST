@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html>
+    <title>Agregar Criminal</title>
+    
+    <h1>Agregar un Criminal</h1>
+
+   
+
+    <form id="formularioCriminal">
+        <label for="nombre">Ingrese su nombre:</label>
+        <input type="text", placeholder="Escribe tu nombre!" size="30" name="nombre" id="nombre" required>
+         <br>  <br>
+        <label for="id">Ingrese su documento:</label>
+        <input type="number", placeholder="Escribe tu documento!" size="30" name="id" id="id" required>
+        <br>  <br>
+        <label for="puntosDeHonor"> Ingrese sus puntos de honor </label>
+        <input type="number", placeholder="Escriba sus puntos!" size="30" name="puntosDeHonor" id="puntosDeHonor" required>
+        <br>  <br>
+        <label for="armas"> Ingrese sus armas</label>
+        <div id="listaDeArmas">
+            <div>
+        <select name="armas" id="armas" required> 
+            <option value="Cuchillo"> Cuchillo </option>
+            <option value="Bomba"> Bomba </option>
+            <option value="Ametralladora"> Ametralladora </option> 
+        </select>
+            </div>
+        <button type="button" onclick="agregarArmaCriminal()">Agregue su arma</button>
+        </div>
+        <ul id="laLista"></ul>
+
+        <br>  <br>
+        <button type="button" onclick="cargarCriminal()">Agregar Criminal</button>    
+    </form>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.2.1/axios.min.js"></script>
+    <script>
+        /*function obtenerCriminal(){
+            const formulario = document.getElementById(formarioCriminal);
+            const nombreCriminal = document.getElementById(nombre);
+            const documnentoCriminal = document.getElementById(id);
+            const puntosCriminal = document.getElementById(puntosDeHonor);
+            const amasCriminal = armas; 
+}*/     
+            let armas = [];            
+
+            function agregarArmaCriminal(){
+                const arma = document.getElementById("armas").value;
+
+                armas.push(arma);
+
+                terminarDeAgregar();
+
+                }
+
+            function terminarDeAgregar(){
+                const laLista = document.getElementById("laLista");
+                laLista.innerHTML = "";
+                armas.forEach(a =>{
+                    const nuevaArma = document.createElement("li");
+                    nuevaArma.textContent = a;
+                    laLista.appendChild(nuevaArma);
+                })
+            }
+
+             function cargarCriminal(){
+                const nombre = document.getElementById("nombre").value;
+                const documento = document.getElementById("id").value;
+                const puntos = document.getElementById("puntosDeHonor").value;
+
+
+                const json = {
+                    nombre: nombre,
+                    id: documento,
+                    puntosDeHonor: puntos,
+                    armas,
+                    tipo:"Criminal"};
+                
+                try{
+                    axios.post("https://localhost:8080/familia/integrantes/agregarCriminal", json);
+                }
+                catch(error){
+                    console.log(error);
+                }
+            }
+            
+         
+    </script>
+
+</html>

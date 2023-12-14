@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html>
+    <title>Agregar Respetable</title>
+    
+    <h1>Agregar un Respetable</h1>
+
+    <form id="formularioRespetable">
+        <label for="nombre">Ingrese su nombre:</label>
+        <input type="text", placeholder="Escribe tu nombre!" size="30" name="nombre" id="nombre" required>
+         <br>  <br>
+        <label for="id">Ingrese su documento:</label>
+        <input type="number", placeholder="Escribe tu documento!" size="30" name="id" id="id" required>
+        <br>  <br>
+        <label for="puntosDeHonor"> Ingrese sus puntos de honor </label>
+        <input type="number", placeholder="Escriba sus puntos!" size="30" name="puntosDeHonor" id="puntosDeHonor" required>
+        <br>  <br>
+        <label for="tieneCargoPolitico">Es usted corrupto?</label>
+        <input type="checkbox" name="tieneCargo" id="tieneCargo" requireds> 
+        <br>  <br>
+        <div id="listaDeTitulos">
+            <div>
+             <label for="titulos"> Ingrese sus titulos</label>
+             <input type="text" name="titulos" size="30" name="titulos" id="titulos">
+            </div>
+            <button type="button" onclick="agregarTitulo()">Agregue su titulo</button>
+        </div>
+        <ul id="laLista"></ul>
+        <br>  <br>
+        <input type="submit" value="Cargar Respetable">
+
+    
+    </form>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.2.1/axios.min.js"></script>
+    <script>
+
+            let titulos = [];            
+
+            function agregarTitulo(){
+             const titulo = document.getElementById("titulos").value;
+
+             titulos.push(titulo);
+
+             terminarDeAgregar();
+
+         }
+
+            function terminarDeAgregar(){
+              const laLista = document.getElementById("listaDeTitulos");
+              laLista.innerHTML = "";
+              titulos.forEach(t =>{
+              const nuevoTitulo = document.createElement("li");
+              nuevoTitulo.textContent = t;
+              laLista.appendChild(nuevoTitulo);
+    })
+}
+      
+            const formulario = document.getElementById("formularioRespetable");
+
+            formulario.addEventListener("submit", function(e){
+                e.preventDefault();
+                const nombreRespetable = document.getElementById("nombre").value;
+                const documentoRespetable = document.getElementById("id").value;
+                const puntosRespetable = document.getElementById("puntosDeHonor").value;
+                const cargoPolitico = document.getElementById("tieneCargo");
+                const titulo = titulos;
+
+            const json = {
+                "nombre":nombreRespetable,
+                "puntosDeHonor":puntosRespetable,
+                "id":documentoRespetable,
+                "tieneCargoPolitico":cargoPolitico,
+                "titulos":titulo
+            }
+            
+            
+
+                
+
+                const respetableAgregar = {nombreRespetable,documentoRespetable,puntosRespetable,cargoPolitico,titulo};
+                console.log(respetableAgregar);
+                try{
+                axios.post("https://localhost:8080/familia/integrantes/agregarRespetable", json)
+                }
+                catch(error){
+                    console.log(error);
+                }
+            })
+            
+          
+    </script>
+</html>

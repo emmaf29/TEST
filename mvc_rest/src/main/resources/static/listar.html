@@ -1,0 +1,94 @@
+<html>
+    <head>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.2.1/axios.min.js"></script>
+        <script>
+          function listaDeIntegrantes(){
+            try{
+                axios.get('http://localhost:8080/familia/integrantes/listar')
+                .then(integrantes =>mostrarIntegrantesTabla(integrantes.data));
+            }
+            catch(error){
+            console.log(error);
+          }
+
+          function mostrarIntegrantesTabla(listaDeIntegrantes){
+           try{ const tablaDeIntegrantes = document.getElementById("tablaIntegrantes");
+           console.log(listaDeIntegrantes);
+           listaDeIntegrantes.forEach(integrante => { 
+           let nuevoIntegranteRow = tablaDeIntegrantes.insertRow(-1);
+           let nuevoIntegranteCelda = nuevoIntegranteRow.insertCell(0);
+           nuevoIntegranteCelda.textContent = integrante.nombre;
+           nuevoIntegranteCelda = nuevoIntegranteRow.insertCell(1);
+           nuevoIntegranteCelda.textContent = integrante.puntosDeHonor;
+           nuevoIntegranteCelda = nuevoIntegranteRow.insertCell(2);
+
+           if(integrante.tipo == "Criminal"){
+            
+           let strArmas = '';
+           integrante.armas.forEach(a =>{
+           strArmas += a.descripcion +'<br>'
+           })
+            nuevoIntegranteCelda.textContent = strArmas;
+           
+          }
+           else{
+           
+            let strTitulos = '';
+            integrante.titulos.forEach(t =>{
+              strTitulos += t.descripcion +'<br>'
+            })
+            nuevoIntegranteCelda.textContent = strTitulos;
+
+           }
+
+           nuevoIntegranteCelda = nuevoIntegranteRow.insertCell(3);
+           nuevoIntegranteCelda.textContent = integrante.tieneCargoPolitico;
+           nuevoIntegranteCelda = nuevoIntegranteRow.insertCell(4);
+           nuevoIntegranteCelda.textContent = integrante.id;
+
+           let newDeleteCell = nuevoIntegranteRow.insertCell(5);
+           let deleteButton = document.createElement("button");
+           deleteButton.textContent = "Eliminar";
+           newDeleteCell.appendChild(deleteButton);
+           deleteButton.addEventListener("click", (event) =>{
+            const idIntegrante = integrante.id;
+            
+            axios.delete('http://localhost:8080/familia/integrantes/eliminarIntegrante/${idIntegrante}');
+           })
+
+
+
+           console.log(integrante);
+        })
+           }
+        catch(error){
+            console.log(error);
+        }
+
+          }   
+    }
+
+        </script>
+    </head>
+    <body>
+        <br>Listar Integrantes<br/>
+
+        <table id="tablaIntegrantes" border="1">
+            <thead>
+              <tr>
+                <th>Nombre</th>
+                <th>Puntos de Honor</th>
+                <th>Objetos</th>
+                <th>Cargo cargo Politico</th>
+                <th>id</th>
+                <th>Eliminar</th>
+              </tr>
+            </thead>
+            <tbody>
+            </tbody>
+        </table>
+        <button onclick="listaDeIntegrantes()">Traer integrantes</button>
+
+
+    </body>
+</html>
